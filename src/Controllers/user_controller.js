@@ -62,16 +62,16 @@ exports.register= (req, res) => {
         if (!user.activate) {
             const message = {
                 from: process.env.EMAIL_USER, // Sender address
-                to: newUser.email, // List of recipients
+                to: user.email, // List of recipients
                 subject: "Activer votre compte", // Subject line
                 html: ` 
-                <p>Bonjour<strong> ${newUser.fullName} </strong>!<br>
+                <p>Bonjour<strong> ${user.fullName} </strong>!<br>
                 Merci beaucoup d'avoir rejoint notre plateforme ! <br>
         afin pour valider  votre Email : <br>
          Activer votre compte en  utilisant ce lien <a class="btn btn-light" href= "${
                               process.env.SERVER_FRONTEND_ADDRESS ||
                               "http://localhost:4200"
-                            }/Activer-Compte/${newUser._id}">Activer</a>  </p>  `,
+                            }/Activer-Compte/${user._id}">Activer</a>  </p>  `,
                
               };
               mailer.send(message);
@@ -80,7 +80,8 @@ exports.register= (req, res) => {
               .json({ error: "you must  confirm your !" });
           } else{
         if (bcrypt.compareSync(password, user.password)) {
-       
+          console.log("login successfully")
+
         
           res.status(200).json({
      user,
@@ -92,8 +93,8 @@ exports.register= (req, res) => {
               "secretkey",
               { expiresIn: "24h" }
             ),
+            "msg": "login successfully" 
           });
-       
         } else {
           res.status(204).json({ "msg": "password incorrect" });
         }
@@ -103,15 +104,15 @@ exports.register= (req, res) => {
       }
     });
   };
-  exports.confirmAccount = (req, res, next) => {
+  exports.activateAccount = (req, res, next) => {
     User.findById(req.params.id)
       .then((user) => {
-        if (user.activate) res.status(404).json({ message: "already confirmed user" });
+        if (user.activate) res.status(404).json({ message: "already activated " });
         else {
           user.activate= true;
           user
             .save()
-            .then(() => res.status(200).json({ message: "confirmed user!" }))
+            .then(() => res.status(200).json({ message: " Account activated!" }))
             .catch((error) => res.status(500).json({ error }));
         }
       })
