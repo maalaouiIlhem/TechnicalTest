@@ -6,7 +6,7 @@ require("dotenv").config();
 
 
 
-
+//URL Shortening
 
 exports.shorten = (req, res) => {
     console.log(req.body)
@@ -64,6 +64,7 @@ exports.shorten = (req, res) => {
 
   };
 
+// get URL By code && count opening statistics of each link 
 
   exports.getUrl = (req, res) => { 
     Url.findOne({ urlCode : req.params.code})
@@ -86,6 +87,8 @@ exports.shorten = (req, res) => {
     })  .catch((error) => res.status(500).json("Internal Server error "+ error ));
   };
 
+
+// get opening statistics of all links By User
  exports.getAllStatistics = (req, res) => {
     Url.find({'owner': req.params.id}, (err, urls) => {
       if (err) {
@@ -95,8 +98,8 @@ exports.shorten = (req, res) => {
         urls.forEach(url => {
         total = total+url.views
 });
-console.log(total);
-return res.status(200).json("opening statistics of all links  " + total)
+   console.log(total);
+   return res.status(200).json("opening statistics of all links  " + total)
 
 }
    

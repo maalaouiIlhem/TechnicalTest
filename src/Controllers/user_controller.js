@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 require("dotenv").config();
 const mailer = require("../middleware/email");
 
-
+// Sing up 
 exports.register= (req, res) => {
   console.log(req.body)
    User.findOne({ email: req.body.email }, (err, user) => {
@@ -49,6 +49,8 @@ exports.register= (req, res) => {
       }
     })
   };
+
+  //Sing In
   exports.login = (req, res) => {
     var password = req.body.password;
     var email = req.body.email;
